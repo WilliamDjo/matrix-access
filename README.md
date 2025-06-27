@@ -9,6 +9,7 @@ This project demonstrates how to access elements in a 2D matrix stored in row-ma
 ## Problem Statement
 
 Arrays in memory are stored as contiguous blocks of data. For a 2D matrix like:
+
 ```
 [[1, 2, 3],
  [4, 5, 6]]
@@ -17,6 +18,7 @@ Arrays in memory are stored as contiguous blocks of data. For a 2D matrix like:
 The memory layout is: `[1, 2, 3, 4, 5, 6]`
 
 To access `M[1][2]` (which should return `6`), we need to calculate the correct memory address using the formula:
+
 ```
 address = base_address + (i × num_columns + j) × element_size
 ```
@@ -33,14 +35,15 @@ The assembly function implements the following algorithm:
 ## Files
 
 - `matrix_access.asm` - Main assembly implementation
-- `test.c` - C test program to verify functionality
+- `tests.c` - C test program to verify functionality
 - `Makefile` - Build configuration
 
 ## Function Signature
 
 ### System V ABI (Linux/Unix)
+
 ```assembly
-get_matrix_element:
+index:
     ; Parameters:
     ; rdi - pointer to matrix (base address)
     ; rsi - number of rows (unused in calculation)
@@ -51,8 +54,9 @@ get_matrix_element:
 ```
 
 ### Windows x64 ABI
+
 ```assembly
-get_matrix_element_win:
+index:
     ; Parameters:
     ; rcx - pointer to matrix (base address)
     ; rdx - number of rows (unused)
@@ -65,6 +69,7 @@ get_matrix_element_win:
 ## Building and Running
 
 ### Linux/Unix (System V ABI)
+
 ```bash
 # Assemble
 nasm -f elf64 matrix_access.asm -o matrix_access.o
@@ -77,6 +82,7 @@ gcc -o test test.c matrix_access.o
 ```
 
 ### Windows (Microsoft x64 ABI)
+
 ```bash
 # Assemble
 nasm -f win64 matrix_access.asm -o matrix_access.obj
@@ -93,15 +99,15 @@ test.exe
 ```c
 #include <stdio.h>
 
-extern int get_matrix_element(int* matrix, int rows, int cols, int row_idx, int col_idx);
+extern int index(int* matrix, int rows, int cols, int row_idx, int col_idx);
 
 int main() {
     int matrix[] = {1, 2, 3, 4, 5, 6}; // [[1,2,3], [4,5,6]]
     int rows = 2, cols = 3;
-    
-    int result = get_matrix_element(matrix, rows, cols, 1, 2);
+
+    int result = index(matrix, rows, cols, 1, 2);
     printf("M[1][2] = %d\n", result); // Output: M[1][2] = 6
-    
+
     return 0;
 }
 ```
